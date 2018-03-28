@@ -71,8 +71,8 @@
                       </tr>
                       <tr  v-for="(element) in elements"
                       :key="element.id">
-                          <td contenteditable="true">{{element.name}}</td>
-                          <td contenteditable="true">{{element.keyName}}</td>
+                          <editable-td :content="element.name" @update="element.name = $event"></editable-td>
+                          <editable-td :content="element.keyName" @update="element.keyName = $event"></editable-td>
                           <td>
                               <span class="table-remove glyphicon glyphicon-remove" @click="removeLine(element.id)"></span>
                           </td>
@@ -80,7 +80,7 @@
                   </table>
                   <div class="form-actions">
                     <div class="pull-right">
-                      <button type="submit" class="btn btn-primary btn-cons-md" @click="createSite">Перейти к вариантам</button>
+                      <button type="submit" class="btn btn-primary btn-cons-md" @click="createSite">Перейти к сценариям</button>
                     </div>
                   </div>
                 </div>
@@ -93,31 +93,13 @@
           <!-- BEGIN PlACE PAGE CONTENT HERE -->
           <!-- END PLACE PAGE CONTENT HERE -->
         </div>
-        <div class="admin-bar" id="quick-access" style="display:">
-          <div class="admin-bar-inner">
-            <div class="form-horizontal">
-              <select id="val1" class="select2-wrapper m-r-10">
-                <option value="Gecko">Gecko</option>
-                <option value="Webkit">Webkit</option>
-                <option value="KHTML">KHTML</option>
-                <option value="Tasman">Tasman</option>
-              </select>
-              <select id="val2" class="select2-wrapper">
-                <option value="Internet Explorer 10">Internet Explorer 10</option>
-                <option value="Firefox 4.0">Firefox 4.0</option>
-                <option value="Chrome">Chrome</option>
-              </select>
-            </div>
-            <button class="btn btn-primary btn-cons btn-add" type="button">Add Browser</button>
-            <button class="btn btn-white btn-cons btn-cancel" type="button">Cancel</button>
-          </div>
-        </div>
-        <div class="addNewRow"></div>
       </div>
 </template>
 
 <script>
 import config from '../../config'
+import editableTd from './editable-td'
+
 let i = 0
 export default {
   data () {
@@ -133,12 +115,21 @@ export default {
           'Content-Type': 'application/json'
         }
       }).then((response) => {
-        console.log(response.body)
-        this.$router.push({
-          name: 'MlAnalytics',
-          params: {
-            siteId: response.body.id
+        this.site = response.body
+        this.elements.map(e => { e.siteId = this.site.id })
+        this.$http.post(config.api.uri + 'sites/' + this.site.id + '/saveSiteElements', this.elements, {
+          headers: {
+            'Content-Type': 'application/json'
           }
+        }).then((response) => {
+          this.$router.push({
+            name: 'MlAnalytics',
+            params: {
+              siteId: this.site.id
+            }
+          })
+        }, (response) => {
+          // TODO notif
         })
       }, (response) => {
         // TODO notif
@@ -159,6 +150,9 @@ export default {
         }
       }
     }
+  },
+  components: {
+    'editable-td': editableTd
   }
 }
 </script>

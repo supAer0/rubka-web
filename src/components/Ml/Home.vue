@@ -52,7 +52,7 @@
                 <a>Аналитика</a>
               </router-link>
               <li>
-                <a href="ml-variants.html">Варианты</a>
+                <a href="ml-variants.html">Сценарии</a>
               </li>
               <router-link tag="li" :to="{name:'SiteElements'}" exact>
                 <a>Элементы</a>

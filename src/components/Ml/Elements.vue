@@ -5,14 +5,11 @@
             <li>
               <p>МУЛЬТИЛЕНДИНГ</p>
             </li>
-            <li><a href="#" class="active">Настройки</a> </li>
+            <li><a href="#" class="active">Элементы</a> </li>
           </ul>
           <div class="page-title">
             <i class="icon-custom-left back" @click="back"></i>
             <h3><span class="semi-bold">{{site.name}}</span> Элементы</h3>
-            <div class="pull-right">
-              <button class="btn btn-danger btn-cons-md" @click="removeSite">Удалить сайт</button>
-            </div>
           </div>
           <!-- END PAGE TITLE -->
           <!-- BEGIN BASIC FORM ELEMENTS-->
@@ -26,7 +23,7 @@
                   </div>
                 </div>
                 <div id="table" class="table-editable overflow block_elements grid-body no-border">
-                  <span class="table-add pull-right glyphicon glyphicon-plus" id="btn_add_elements" @click="addNewLine"></span>
+                  <span class="table-add pull-right glyphicon glyphicon-plus btn" id="btn_add_elements" @click="addNewLine"></span>
                   <table class="table" id="table_elements">
                       <tr class="tr-head">
                       <th>Название</th>
@@ -35,10 +32,12 @@
                       </tr>
                       <tr  v-for="(element) in elements"
                       :key="element.id">
-                          <td contenteditable="true">{{element.name}}</td>
-                          <td contenteditable="true">{{element.keyName}}</td>
+                          <!-- <td contenteditable="true">{{element.name}}</td> -->
+                          <!-- <td contenteditable="true">{{element.keyName}}</td> -->
+                          <editable-td :content="element.name" @update="element.name = $event"></editable-td>
+                          <editable-td :content="element.keyName" @update="element.keyName = $event"></editable-td>
                           <td>
-                              <span class="table-remove glyphicon glyphicon-remove" @click="removeLine(element.id)"></span>
+                              <span style="cursor: pointer" class="table-remove glyphicon glyphicon-remove" @click="removeLine(element)"></span>
                           </td>
                       </tr>
                   </table>
@@ -58,12 +57,14 @@
 
 <script>
 import config from '../../config'
+import editableTd from './editable-td'
+
 let i = 0
 export default {
   data () {
     return {
       site: {},
-      elements: {}
+      elements: []
     }
   },
   created: function () {
@@ -83,42 +84,20 @@ export default {
 
       })
     },
-    patchSite: function () {
-      this.$http.patch(config.api.uri + 'sites/' + this.$route.params.siteId, this.site, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }).then((response) => {
-        this.$router.push({
-          name: 'MlAnalytics'
-        })
-      }, (response) => {
-        // TODO notif
-      })
-    },
-    removeSite: function () {
-      if (confirm('Вы действительно хотите удалить сайт ' + this.site.name + '?')) {
-        this.$http.delete(config.api.uri + 'sites/' + this.$route.params.siteId, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }).then((response) => {
-          this.$router.push({
-            name: 'Rubka'
-          })
-        }, (response) => {
-          // TODO notif
-        })
-      }
-    },
     saveElements: function () {
-      this.$http.patch(config.api.uri + 'sites/' + this.$route.params.siteId, this.site, {
+      console.log(this.elements)
+      this.$http.post(config.api.uri + 'sites/' + this.$route.params.siteId + '/saveSiteElements/', this.elements, {
         headers: {
           'Content-Type': 'application/json'
         }
       }).then((response) => {
-        this.$router.push({
-          name: 'MlAnalytics'
+        // TODO notif
+        // TODO rewrite
+        this.elements = []
+        this.$http.get(config.api.uri + 'sites/' + this.$route.params.siteId + '/siteElements').then((response) => {
+          this.elements = response.body
+        }, (response) => {
+
         })
       }, (response) => {
         // TODO notif
@@ -128,17 +107,33 @@ export default {
       this.$router.go(-1)
     },
     addNewLine: function () {
-      this.elements.push({id: i.toString(), name: 'undef', keyName: 'undef'})
+      this.elements.push({id: i.toString(), name: 'undef', keyName: 'undef', siteId: this.site.id})
       i++
     },
-    removeLine: function (inputId) {
+    removeLine: function (element) {
+      if (element.id.length > 10) {
+        if (confirm('Вы действительно хотите элемент ' + element.name + '?')) {
+          this.$http.delete(config.api.uri + 'siteElements/' + element.id, {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }).then((response) => {
+
+          }, (response) => {
+            console.log(response)
+          })
+        } else { return }
+      }
       for (let j = 0; j < this.elements.length; j++) {
-        if (this.elements[j].id === inputId) {
+        if (this.elements[j].id === element.id) {
           this.elements.splice(j, 1)
           return
         }
       }
     }
+  },
+  components: {
+    'editable-td': editableTd
   }
 }
 </script>
