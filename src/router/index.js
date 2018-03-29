@@ -12,7 +12,7 @@ Vue.use(Router)
 Vue.use(VueResource)
 
 export default new Router({
-  mode: 'history',
+  // mode: 'history',
   props: true,
   routes: [
     {
