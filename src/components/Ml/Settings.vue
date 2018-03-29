@@ -43,6 +43,12 @@
                           </div>
                         </div>
                         <div class="form-group">
+                          <label class="form-label">ID яндекс метрики</label>
+                          <div class="controls">
+                            <input type="text" v-model="site.yaMetrikaId" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group">
                           <label class="form-label">Токен</label>
                           <div class="controls">
                             <input type="text" v-model="site.token" class="form-control" disabled="disabled">

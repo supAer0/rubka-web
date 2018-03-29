@@ -40,12 +40,12 @@
                             <input type="text" placeholder="google.com" class="form-control"  v-model="site.url" required>
                           </div>
                         </div>
-                        <!-- <div class="form-group">
-                          <label class="form-label">Токен</label>
+                        <div class="form-group">
+                          <label class="form-label">ID яндекс метрики</label>
                           <div class="controls">
-                            <input type="text" class="form-control" disabled="disabled">
+                            <input type="text" v-model="site.yaMetrikaId" class="form-control">
                           </div>
-                        </div> -->
+                        </div>
                       </div>
                     </div>
                   </div>
