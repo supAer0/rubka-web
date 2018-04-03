@@ -3,6 +3,10 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import VueChartkick from 'vue-chartkick'
+import Chart from 'chart.js'
+
+Vue.use(VueChartkick, {adapter: Chart})
 // style
 require('./assets/plugins/pace/pace-theme-flash.css')
 require('./assets/plugins/bootstrapv3/css/bootstrap.min.css')
@@ -11,6 +15,7 @@ require('./assets/plugins/font-awesome/css/font-awesome.css')
 require('./assets/plugins/animate.min.css')
 require('./assets/plugins/jquery-scrollbar/jquery.scrollbar.css')
 require('./assets/webarch/css/webarch.css')
+// require('./assets/plugins/bootstrap-datepicker/css/datepicker.css')
 // js
 require('./assets/plugins/pace/pace.min.js')
 require('./assets/plugins/jquery/jquery-1.11.3.min.js')
@@ -21,6 +26,7 @@ require('./assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js')
 require('./assets/plugins/jquery-validation/js/jquery.validate.min.js')
 require('./assets/plugins/bootstrap-select2/select2.min.js')
 require('./assets/webarch/js/webarch.js')
+// require('./assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')
 
 Vue.config.productionTip = false
 

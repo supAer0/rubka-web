@@ -22,7 +22,7 @@
                     <a href="javascript:;" class="collapse"></a>
                   </div>
                 </div>
-                <div id="table" class="table-editable overflow block_elements grid-body no-border">
+                <div id="table" class="table table-editable overflow block_elements grid-body no-border">
                   <span class="table-add pull-right glyphicon glyphicon-plus btn" id="btn_add_elements" @click="addNewLine"></span>
                   <table class="table" id="table_elements">
                       <tr class="tr-head">
@@ -30,6 +30,7 @@
                       <th>Ключ</th>
                       <th></th>
                       </tr>
+                      <tbody>
                       <tr  v-for="(element) in elements"
                       :key="element.id">
                           <!-- <td contenteditable="true">{{element.name}}</td> -->
@@ -40,6 +41,7 @@
                               <span style="cursor: pointer" class="table-remove glyphicon glyphicon-remove" @click="removeLine(element)"></span>
                           </td>
                       </tr>
+                      </tbody>
                   </table>
                   <div class="form-actions">
                     <div class="pull-right">
